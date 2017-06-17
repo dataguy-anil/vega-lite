@@ -13,7 +13,7 @@ Composite marks are "macros" for more complex layered graphics with multiple pri
 
 ## Box Plot
 
-`box-plot` composite mark represents a [box plot](https://en.wikipedia.org/wiki/Box_plot). The lower and upper whiskers extend to the min and max respectively. The middle tick in the box represents the median. The lower and upper part of the box represents quartile 1 and 3 respectively.
+`box-plot` composite mark represents a [box plot](https://en.wikipedia.org/wiki/Box_plot). The middle tick in the box represents the median. The lower and upper part of the box represents quartile 1 and 3 respectively. The point the lower and upper whiskers extend to depends on the type of `box-plot` specified. To learn more, see the Boxplot Types section.
 
 `box-plot` supports the following [encoding channels](encoding.html#channels): `size`, `color`, `opacity`.
 
@@ -78,3 +78,36 @@ There are three roles: `box`, `boxWhisker`, `boxMid`. Therefore as you have seen
 ```
 
 **Note**: `box` can specify `size` in addition to `color` and `opacity` which `boxWhisker` and `boxMid` can specify.
+
+### Boxplot Orientation
+`box-plot` orientation is determined by the continuous field axis. If the continuous field is on the x axis then the `box-plot` has a horizontal orientation. If the continuous field is on the y axis then the `box-plot` has a vertical orientation. In the case where both the x and y axis have continuous fields, the axis with a specified aggregate property of `box-plot` determines the orientation. So, if the x axis has an aggregate value of `box-plot` the `box-plot` has a horizontal orientation and if the y axis has an aggregate value of `box-plot` the `box-plot` has a vertical orientation. If no aggregate value for either of the axes is specified, an orient property must be specified in the mark object. For example the following `mark` example specifies a vertical `box-plot`.
+
+{: .suppress-error}
+```json
+"mark": {
+  "type": "box-plot",
+  "orient": "vertical"
+}
+```
+
+In the case an aggregate value of `box-plot` in one of the axes is not specified and an orient property is not specified the default orientation of vertical is used.
+
+### Boxplot Types
+There are two supported types of boxplots which you specify with the extent property in the mark definition:
+1) `min-max boxplot` which is a boxplot where lower and upper whiskers are defined as the min and max respectively
+{: .suppress-error}
+```json
+"mark": {
+  "type": "box-plot",
+  "extent": "min-max"
+}
+```
+2) `k * IQR boxplot` which is a boxplot where the lower whisker is defined as the first quartile minus k * IQR (q1 - k * IQR) and the upper whisker is defined as the third quartile plus k * IQR (q3 + k * IQR). In this type of boxplot you are able to specify the constant or scalar k which is typically 1.5. IQR is the interquartile range which is quartile 3 minus quartile 1.
+```json
+"mark": {
+  "type": "box-plot",
+  "extent": 1.5
+}
+```
+
+If the extent is not specified then the default `box-plot` type of `min-max` is used.
